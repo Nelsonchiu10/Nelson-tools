@@ -147,8 +147,8 @@ function Hero() {
           href="/pomodoro"
           className="absolute right-0 top-0 w-[48%] rotate-6 transition hover:z-20 hover:rotate-0 hover:scale-105"
         >
-          <div className="rounded-3xl border border-white/15 bg-linear-to-br from-rose-500 to-red-700 p-5 shadow-2xl motion-safe:animate-float [animation-delay:-2s]">
-            <MiniTimer />
+          <div className="rounded-3xl border border-white/60 bg-linear-to-br from-[#fdf3ee] to-[#f6ddd4] p-5 text-[#4a403c] shadow-2xl motion-safe:animate-float [animation-delay:-2s]">
+            <MiniClock />
             <p className="mt-3 text-center font-black">🍅 番茄鐘</p>
           </div>
         </Link>
@@ -218,13 +218,15 @@ function ToolsBento() {
         {/* 番茄鐘 */}
         <Link
           href="/pomodoro"
-          className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-linear-to-br from-rose-500 to-red-700 p-8 md:col-span-2"
+          className="group relative overflow-hidden rounded-[2rem] border border-white/60 bg-linear-to-br from-[#fdf3ee] to-[#f6ddd4] p-8 text-[#4a403c] md:col-span-2"
         >
-          <ToolBadge>02 · 專注</ToolBadge>
+          <span className="inline-block rounded-full bg-[#e07a5f] px-3 py-1 text-xs font-black text-white">
+            02 · 專注
+          </span>
           <h3 className="mt-4 text-3xl font-black">番茄鐘</h3>
-          <p className="mt-3 text-white/80">25 分鐘專注、5 分鐘休息，時間到響鈴提醒。</p>
-          <div className="mx-auto mt-6 w-36">
-            <MiniTimer fillOnHover />
+          <p className="mt-3 text-[#6b5f5a]">25 分鐘專注、5 分鐘休息，時間到響鈴提醒。</p>
+          <div className="mx-auto mt-6 w-40 transition-transform duration-500 group-hover:scale-105">
+            <MiniClock />
           </div>
           <GoArrow />
         </Link>
@@ -426,26 +428,54 @@ function MiniWheel({ spinOnHover = false }: { spinOnHover?: boolean }) {
   );
 }
 
-function MiniTimer({ fillOnHover = false }: { fillOnHover?: boolean }) {
+// 角度以「12 點鐘方向、順時針」為 0 度
+function clockPoint(angle: number, r: number) {
+  const rad = (angle * Math.PI) / 180;
+  return { x: Math.round(r * Math.sin(rad) * 100) / 100, y: Math.round(-r * Math.cos(rad) * 100) / 100 };
+}
+
+// 與番茄鐘頁面相同的指針倒數時鐘：整圈 25 分鐘，示意還剩 18 分鐘
+function MiniClock() {
+  const TOTAL = 25;
+  const REMAINING = 18;
+  const angle = (REMAINING / TOTAL) * 360;
+  const edge = clockPoint(angle, 80);
+  const hand = clockPoint(angle, 66);
+
   return (
-    <div className="relative flex aspect-square items-center justify-center">
-      <svg viewBox="0 0 100 100" className="absolute inset-0 -rotate-90">
-        <circle cx={50} cy={50} r={44} fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth={7} />
-        <circle
-          cx={50}
-          cy={50}
-          r={44}
-          fill="none"
-          stroke="white"
-          strokeWidth={7}
-          strokeLinecap="round"
-          strokeDasharray={276.5}
-          strokeDashoffset={95}
-          className={fillOnHover ? "transition-[stroke-dashoffset] duration-1000 group-hover:[stroke-dashoffset:0]" : ""}
-        />
-      </svg>
-      <span className="font-mono text-2xl font-bold sm:text-3xl">25:00</span>
-    </div>
+    <svg viewBox="-115 -115 230 230" className="w-full drop-shadow-[0_10px_20px_rgba(120,90,80,0.2)]">
+      <circle r={112} fill="#f7d9cf" />
+      <circle r={104} fill="#fffdfa" />
+      <path d={`M 0 0 L 0 -80 A 80 80 0 ${angle > 180 ? 1 : 0} 1 ${edge.x} ${edge.y} Z`} fill="#e07a5f" opacity={0.85} />
+      {Array.from({ length: TOTAL }, (_, i) => {
+        const major = i % 5 === 0;
+        const a = clockPoint((i / TOTAL) * 360, major ? 80 : 85);
+        const b = clockPoint((i / TOTAL) * 360, 90);
+        return (
+          <line
+            key={i}
+            x1={a.x}
+            y1={a.y}
+            x2={b.x}
+            y2={b.y}
+            stroke="#8b7d77"
+            strokeWidth={major ? 3 : 1.5}
+            strokeLinecap="round"
+          />
+        );
+      })}
+      {[0, 5, 10, 15, 20].map((m) => {
+        const p = clockPoint((m / TOTAL) * 360, 98);
+        return (
+          <text key={m} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="central" fontSize={13} fontWeight={800} fill="#8b7d77">
+            {m}
+          </text>
+        );
+      })}
+      <line x1={0} y1={0} x2={hand.x} y2={hand.y} stroke="#4a403c" strokeWidth={7} strokeLinecap="round" />
+      <circle r={9} fill="#4a403c" />
+      <circle r={4} fill="#e07a5f" />
+    </svg>
   );
 }
 
