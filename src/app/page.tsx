@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EditNameButton, NameDialog, OwnerPrefix } from "./owner-name";
 
 const TOOLS = [
   { href: "/lottery", name: "幸運大轉盤", emoji: "🎡" },
@@ -36,6 +37,7 @@ export default function Home() {
       </main>
 
       <SiteFooter />
+      <NameDialog />
     </div>
   );
 }
@@ -50,7 +52,10 @@ function SiteHeader() {
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-br from-violet-500 via-rose-500 to-amber-400 text-lg">
             🧰
           </span>
-          <span className="hidden sm:inline">Nelson 的小工具箱</span>
+          <span className="hidden sm:inline">
+            <OwnerPrefix />
+            小工具箱
+          </span>
         </Link>
         <nav className="flex items-center gap-1 text-sm font-bold">
           {TOOLS.map((tool) => (
@@ -63,6 +68,7 @@ function SiteHeader() {
               <span className="hidden sm:inline">{tool.name}</span>
             </Link>
           ))}
+          <EditNameButton />
           <a
             href="#tools"
             className="ml-1 rounded-full bg-white px-4 py-2 text-[#0b0814] transition hover:bg-amber-300"
@@ -90,7 +96,7 @@ function Hero() {
         </span>
 
         <h1 className="mt-8 text-6xl font-black leading-[1.05] tracking-tight sm:text-7xl lg:text-8xl">
-          Nelson 的
+          <OwnerPrefix />
           <span className="mt-2 block bg-linear-to-r from-violet-400 via-rose-400 via-50% to-amber-300 bg-size-[200%_auto] bg-clip-text pb-2 text-transparent motion-safe:animate-gradient">
             小工具箱
           </span>
@@ -351,7 +357,10 @@ function SiteFooter() {
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-br from-violet-500 via-rose-500 to-amber-400">
               🧰
             </span>
-            Nelson 的小工具箱
+            <span>
+              <OwnerPrefix />
+              小工具箱
+            </span>
           </p>
           <p className="mt-4 max-w-sm leading-relaxed text-white/50">
             一些讓生活更順手、更有趣的小工具，持續增加中。
@@ -372,7 +381,7 @@ function SiteFooter() {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col justify-between gap-2 px-4 py-6 text-sm text-white/40 sm:flex-row">
-          <p>© 2026 Nelson 的小工具箱</p>
+          <p>© 2026 小工具箱 · Made by Nelson</p>
           <p>Made with Next.js & Tailwind CSS</p>
         </div>
       </div>

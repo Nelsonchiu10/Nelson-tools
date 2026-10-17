@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Nelson 的小工具箱",
-    template: "%s | Nelson 的小工具箱",
+    default: "我的小工具箱",
+    template: "%s | 小工具箱",
   },
   description: "抽獎轉盤、番茄鐘、好運抽籤，打開瀏覽器就能用的小工具。",
 };
